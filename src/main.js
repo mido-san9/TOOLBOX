@@ -76,6 +76,14 @@ app.innerHTML = `
       <h2>البساطة تلتقي بالإنتاجية.</h2>
       <p>منصة واحدة، أدوات متعددة، ووقت أقل لإنجاز مهامك.</p>
     </section>
+
+    <section id="ad-test-area" style="max-width:900px;margin:28px auto;padding:18px;text-align:center;">
+      <div style="font-size:12px;opacity:.65;margin-bottom:10px;">إعلانات تجريبية</div>
+      <div id="container-fba4c16791c70e7d4af2d7f843893e94"></div>
+      <div style="margin-top:18px;">
+        <a href="https://araplhn.org/4/c469b5fb5a88e2226c953137092753df" target="_blank" rel="noopener noreferrer sponsored" style="display:inline-block;padding:10px 18px;border-radius:12px;text-decoration:none;border:1px solid currentColor;">تجربة Smartlink</a>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -91,6 +99,29 @@ app.innerHTML = `
     </div>
   </div>
 `
+
+// Adsterra test units: Native Banner, Social Bar, and Popunder.
+function loadAdsterraScript(src, extraAttributes = {}) {
+  const script = document.createElement('script')
+  script.src = src
+  script.async = true
+  script.setAttribute('data-cfasync', 'false')
+  for (const [name, value] of Object.entries(extraAttributes)) {
+    script.setAttribute(name, value)
+  }
+  document.body.appendChild(script)
+}
+
+// Native Banner
+loadAdsterraScript('https://bauval.org/21/fba4c16791c70e7d4af2d7f843893e94', {
+  'data-cfasync': 'false'
+})
+
+// Social Bar
+loadAdsterraScript('https://bauval.org/14/376934fa5c25f28a5c6d197c4f4ec9ce')
+
+// Popunder
+loadAdsterraScript('https://abscloud.org/1/ebb354cdd7246897817c60a2c446fda8')
 
 const grid = document.querySelector('#toolsGrid')
 const search = document.querySelector('#search')
