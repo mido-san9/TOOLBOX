@@ -2,17 +2,22 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import { GoogleGenAI } from '@google/genai'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 dotenv.config()
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const app = express()
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 app.use(express.json({ limit: '100kb' }))
 
 // التحقق من مفتاح Gemini
 if (!process.env.GEMINI_API_KEY) {
-  console.error('GEMINI_API_KEY غير موجود في ملف .env')
+  console.error('GEMINI_API_KEY غير موجود')
   process.exit(1)
 }
 
@@ -21,7 +26,10 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
 })
 
-// استقبال رسائل ميني ميدو
+// تقديم ملفات واجهة TOOLBOX
+app.use(express.static(path.join(__dirname, 'dist')))
+
+// استقبال رسائل Mini Mido
 app.post('/api/chat', async (req, res) => {
   try {
     const {
@@ -75,7 +83,7 @@ app.post('/api/chat', async (req, res) => {
       settings.extra || ''
     ).slice(0, 1000)
 
-    // تعليمات شخصية ميني ميدو
+    // تعليمات شخصية Mini Mido
     const systemInstruction = `
 أنت ${name}، المساعد الذكي الرسمي لمنصة TOOLBOX.
 
@@ -153,7 +161,19 @@ ${extra}
   }
 })
 
+// إعادة واجهة الموقع عند فتح الصفحة
+app.use((req, res, next) => {
+  if (req.method !== 'GET') return next()
+
+  res.sendFile(
+    path.join(__dirname, 'dist', 'index.html'),
+    err => {
+      if (err) next(err)
+    }
+  )
+})
+
 // تشغيل السيرفر
-app.listen(PORT, () => {
-  console.log('🤖 MINI MIDO SERVER running at http://localhost:3001')
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🤖 MINI MIDO SERVER running on port ${PORT}`)
 })
